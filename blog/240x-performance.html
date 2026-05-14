@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="How I reduced a tax processing script from 2+ hours to under 30 seconds — a 240× performance improvement using Python profiling, caching, and I/O optimization." />
+  <title>How I made a tax script 240× faster · Taoqeer Nezam</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">Taoqeer Nezam</a>
+  <div class="nav-links">
+    <a href="/blog/">Writing</a>
+    <a href="/projects/">Projects</a>
+    <a href="/about/">About</a>
+    <a href="mailto:mailtaoqeer@gmail.com">Contact</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div style="padding: 3rem 0 4rem;">
+    <div class="prose">
+      <div style="margin-bottom:1.5rem;">
+        <a href="/blog/" style="font-size:13px; color:var(--faint);">← Writing</a>
+      </div>
+
+      <span class="tag" style="margin-bottom:1rem; display:inline-block;">performance</span>
+
+      <h1>How I made a tax processing script 240× faster</h1>
+      <span class="post-date">Draft — publishing soon</span>
+
+      <p>
+        When I joined EY, one of the first things I inherited was a Python script
+        that processed taxation data for enterprise clients. It worked. Mostly.
+        The problem: it took <strong>over 2 hours to run</strong>. Every. Single. Time.
+      </p>
+
+      <p>
+        By the time I was done, it ran in <strong>under 30 seconds</strong>.
+        That's a 240× improvement. This post is about how I got there —
+        not just the technical fixes, but how I thought about the problem.
+      </p>
+
+      <h2>Step 1: Don't guess. Profile first.</h2>
+      <p>
+        The worst thing you can do when optimizing is start changing things
+        without data. I started with Python's built-in <code>cProfile</code> to
+        get a real picture of where time was actually going.
+      </p>
+      <pre><code>import cProfile
+import pstats
+
+profiler = cProfile.Profile()
+profiler.enable()
+
+# ... run the script logic ...
+
+profiler.disable()
+stats = pstats.Stats(profiler)
+stats.sort_stats('cumulative')
+stats.print_stats(20)</code></pre>
+      <p>
+        The output was eye-opening. <strong>~70% of runtime was in file I/O</strong> —
+        specifically, the script was reading the same reference data files
+        hundreds of times inside a loop.
+      </p>
+
+      <h2>Step 2: The obvious fix — cache the reference data</h2>
+      <p>
+        The script had a pattern like this:
+      </p>
+      <pre><code># Before — reading from disk thousands of times
+for record in records:
+    rates = read_tax_rates_from_file()   # disk read every iteration
+    result = calculate(record, rates)</code></pre>
+      <p>
+        The fix was embarrassingly simple:
+      </p>
+      <pre><code># After — read once, reuse
+rates = read_tax_rates_from_file()       # read once
+for record in records:
+    result = calculate(record, rates)</code></pre>
+      <p>
+        This alone got us from 2 hours to about 18 minutes. Good, but not good enough.
+      </p>
+
+      <h2>Step 3: Vectorize with Pandas instead of looping</h2>
+      <p>
+        The calculation logic was doing row-by-row iteration with a Python for loop
+        over a DataFrame. This is one of the most common Pandas anti-patterns.
+      </p>
+      <pre><code># Before — slow Python loop
+results = []
+for idx, row in df.iterrows():
+    results.append(compute_tax(row['amount'], row['category']))
+
+# After — vectorized operation
+df['tax'] = df.apply(lambda row: compute_tax(row['amount'], row['category']), axis=1)
+# Or even better with NumPy:
+df['tax'] = np.where(df['category'] == 'A', df['amount'] * 0.18, df['amount'] * 0.12)</code></pre>
+
+      <h2>The final result</h2>
+      <p>
+        After profiling, caching reference data, vectorizing operations, and
+        eliminating redundant file reads — the script went from <strong>2+ hours to
+        under 30 seconds</strong>. A 240× improvement.
+      </p>
+      <p>
+        The biggest lesson: <strong>profile before you optimize</strong>.
+        I could have spent a week rewriting things that didn't matter.
+        The profiler told me exactly where the problem was in 5 minutes.
+      </p>
+
+      <hr style="margin: 2.5rem 0;" />
+      <p style="font-size:13px; color:var(--faint);">
+        This post is a draft — full version with more details coming soon.
+        <a href="mailto:mailtaoqeer@gmail.com">Email me</a> if you want to discuss.
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">Md Taoqeer Nezam · Bangalore, India</div>
+  <div class="footer-links">
+    <a href="https://github.com/taoqeer" target="_blank">GitHub</a>
+    <a href="https://linkedin.com/in/taoqeer" target="_blank">LinkedIn</a>
+    <a href="mailto:mailtaoqeer@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>
