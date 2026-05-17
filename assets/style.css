@@ -16,7 +16,7 @@
   --serif:     'Lora', Georgia, serif;
   --sans:      'DM Sans', system-ui, sans-serif;
   --mono:      'DM Mono', monospace;
-  --max:       760px;
+  --max:       1080px;
   --nav-h:     58px;
 }
 
@@ -26,8 +26,8 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
-  font-size: 15px;
-  line-height: 1.75;
+  font-size: 16px;
+  line-height: 1.8;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -64,7 +64,7 @@ nav {
 .container {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.25rem;
 }
 
 section { padding: 3rem 0; border-top: 1px solid var(--border); }
@@ -143,7 +143,7 @@ hr { border: none; border-top: 1px solid var(--border); }
   padding: 1rem 0; border-bottom: 1px solid var(--border); gap: 1.5rem;
 }
 .post-item:first-child { border-top: 1px solid var(--border); }
-.post-title { font-size: 15px; color: var(--text); font-weight: 400; line-height: 1.5; }
+.post-title { font-size: 16px; color: var(--text); font-weight: 400; line-height: 1.5; }
 .post-title:hover { color: var(--link); text-decoration: none; }
 .post-meta { font-size: 12px; color: var(--faint); white-space: nowrap; }
 .post-tag {
@@ -172,11 +172,11 @@ hr { border: none; border-top: 1px solid var(--border); }
 }
 .exp-item:first-child { border-top: 1px solid var(--border); }
 .exp-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.25rem; }
-.exp-co { font-weight: 500; font-size: 15px; }
+.exp-co { font-weight: 500; font-size: 16px; }
 .exp-period { font-size: 12px; color: var(--faint); white-space: nowrap; }
 .exp-role { font-size: 13px; color: var(--accent); margin-bottom: 0.75rem; }
 .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
-.exp-bullets li { font-size: 13px; color: var(--muted); padding-left: 1.1rem; position: relative; line-height: 1.65; }
+.exp-bullets li { font-size: 14px; color: var(--muted); padding-left: 1.1rem; position: relative; line-height: 1.7; }
 .exp-bullets li::before { content: '↳'; position: absolute; left: 0; color: var(--faint); font-size: 12px; top: 1px; }
 .exp-bullets li strong { color: var(--text); }
 .badge-now {
@@ -225,15 +225,60 @@ footer {
 .prose h1 { font-family: var(--serif); font-size: 2rem; font-weight: 500; line-height: 1.25; margin-bottom: 0.75rem; }
 .prose h2 { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; margin: 2.5rem 0 1rem; }
 .prose h3 { font-size: 1rem; font-weight: 600; margin: 2rem 0 0.75rem; }
-.prose p { font-size: 15px; color: #2a2520; line-height: 1.85; margin-bottom: 1.25rem; }
+.prose p { font-size: 16px; color: var(--text); line-height: 1.9; margin-bottom: 1.35rem; }
 .prose ul, .prose ol { margin: 0 0 1.25rem 1.5rem; }
-.prose li { font-size: 15px; color: #2a2520; line-height: 1.8; margin-bottom: 0.35rem; }
+.prose li { font-size: 16px; color: var(--text); line-height: 1.85; margin-bottom: 0.4rem; }
 .prose code { font-family: var(--mono); font-size: 13px; background: var(--bg2); padding: 1px 6px; border-radius: 3px; color: #5a3e28; }
 .prose pre { background: #1c1916; color: #e8e0d0; border-radius: 6px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
 .prose pre code { background: none; color: inherit; padding: 0; font-size: 13px; }
 .prose blockquote { border-left: 3px solid var(--accent); padding-left: 1.25rem; margin: 1.5rem 0; color: var(--muted); font-style: italic; }
 .prose strong { color: var(--text); }
 .post-date { font-size: 13px; color: var(--faint); margin-bottom: 2rem; display: block; }
+
+/* ── DARK MODE ───────────────────────────── */
+[data-theme="dark"] {
+  --bg:        #1c1916;
+  --bg2:       #252220;
+  --bg3:       #2e2b27;
+  --text:      #e8e0d0;
+  --muted:     #a09890;
+  --faint:     #6b6560;
+  --border:    #333028;
+  --accent:    #4a9e75;
+  --accent-bg: #1a3328;
+  --link:      #7badd4;
+}
+[data-theme="dark"] nav {
+  background: rgba(28,25,22,0.92);
+}
+[data-theme="dark"] .prose pre {
+  background: #111009;
+}
+[data-theme="dark"] .prose code {
+  color: #d4a97a;
+}
+[data-theme="dark"] .btn-solid {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--sans);
+  transition: all 0.15s;
+  margin-left: 1.25rem;
+}
+.theme-toggle:hover {
+  border-color: var(--muted);
+  color: var(--text);
+  background: var(--bg2);
+}
 
 /* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 620px) {
