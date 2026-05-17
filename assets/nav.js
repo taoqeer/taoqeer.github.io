@@ -1,3 +1,13 @@
+// Nav logo: full name on home, short name elsewhere
+(function () {
+  const path = window.location.pathname;
+  const logo = document.querySelector('.nav-logo');
+  if (logo) {
+    const isHome = path === '/' || path.endsWith('/index.html') && !path.includes('/blog') && !path.includes('/projects') && !path.includes('/about');
+    logo.textContent = isHome ? 'Md Taoqeer Nezam' : 'Taoqeer';
+  }
+})();
+
 // Active nav link
 (function () {
   const path = window.location.pathname;

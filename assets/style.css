@@ -221,7 +221,7 @@ footer {
 .footer-links a:hover { color: var(--text); text-decoration: none; }
 
 /* ── BLOG POST PAGE ──────────────────────── */
-.prose { max-width: 680px; }
+.prose { max-width: 680px; margin: 0 auto; }
 .prose h1 { font-family: var(--serif); font-size: 2rem; font-weight: 500; line-height: 1.25; margin-bottom: 0.75rem; }
 .prose h2 { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; margin: 2.5rem 0 1rem; }
 .prose h3 { font-size: 1rem; font-weight: 600; margin: 2rem 0 0.75rem; }
